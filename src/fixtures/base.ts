@@ -3,14 +3,15 @@ import { fakerSeed } from '@data/faker';
 
 const trackers = ['**/_vercel/insights/**', '**/_vercel/speed-insights/**', '**/plausible.io/**'];
 
-const instantScrolling = () =>
+const stableRendering = () =>
   document.addEventListener('DOMContentLoaded', () => {
     const style = document.createElement('style');
-    style.textContent = '*, *::before, *::after { scroll-behavior: auto !important; }';
+    style.textContent =
+      '*, *::before, *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; }';
     document.head.append(style);
   });
 
-export const test = base.extend<{ blockTrackers: void; instantScroll: void; dataSeed: void }>({
+export const test = base.extend<{ blockTrackers: void; stableRendering: void; dataSeed: void }>({
   blockTrackers: [
     async ({ context }, use) => {
       for (const pattern of trackers) {
@@ -21,9 +22,9 @@ export const test = base.extend<{ blockTrackers: void; instantScroll: void; data
     { auto: true },
   ],
 
-  instantScroll: [
+  stableRendering: [
     async ({ context }, use) => {
-      await context.addInitScript(instantScrolling);
+      await context.addInitScript(stableRendering);
       await use();
     },
     { auto: true },
