@@ -16,7 +16,10 @@ export abstract class ApiClient {
     return this.token ? { Authorization: `Bearer ${this.token}` } : {};
   }
 
-  protected async parse<S extends z.ZodType>(response: APIResponse, schema: S): Promise<ApiResult<z.infer<S>>> {
+  protected async parse<S extends z.ZodType>(
+    response: APIResponse,
+    schema: S,
+  ): Promise<ApiResult<z.infer<S>>> {
     return { status: response.status(), body: schema.parse(await response.json()) };
   }
 }
