@@ -1,0 +1,127 @@
+name: Run tests
+
+on:
+  workflow_call:
+    inputs:
+      grep:
+        description: Tag expression passed to --grep, empty runs everything
+        type: string
+        default: ''
+      app:
+        description: all | awa | testblocks
+        type: string
+        default: all
+      browser:
+        description: all | chromium | firefox | webkit | mobile
+        type: string
+        default: all
+      shards:
+        description: Number of parallel shards
+        type: number
+        default: 1
+      update-snapshots:
+        description: Regenerate visual baselines and upload them as an artifact
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  plan:
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.plan.outputs.projects }}
+      shards: ${{ steps.plan.outputs.shards }}
+    steps:
+      - id: plan
+        env:
+          APP: ${{ inputs.app }}
+          BROWSER: ${{ inputs.browser }}
+          SHARDS: ${{ inputs.shards }}
+        run: |
+          app=$([ "$APP" = all ] && echo '*' || echo "$APP*")
+          browser=$([ "$BROWSER" = all ] && echo '*' || echo "$BROWSER")
+          projects=$([ "$app:$browser" = '*:*' ] && echo '' || echo "--project=$app:$browser")
+          echo "projects=$projects" >> "$GITHUB_OUTPUT"
+          echo "shards=$(jq -cn --argjson n "$SHARDS" '[range(1; $n + 1)]')" >> "$GITHUB_OUTPUT"
+
+  test:
+    needs: plan
+    runs-on: ubuntu-latest
+    container: mcr.microsoft.com/playwright:v1.64.0-noble
+    environment: production
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: ${{ fromJSON(needs.plan.outputs.shards) }}
+    env:
+      CI: true
+      HOME: /root
+      TEST_ENV: production
+      TB_TEST_EMAIL: ${{ secrets.TB_TEST_EMAIL }}
+      TB_TEST_PASSWORD: ${{ secrets.TB_TEST_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+
+      - name: Run tests
+        if: ${{ !inputs.update-snapshots }}
+        env:
+          GREP: ${{ inputs.grep }}
+          PROJECTS: ${{ needs.plan.outputs.projects }}
+          SHARD: ${{ matrix.shard }}/${{ strategy.job-total }}
+        run: npx playwright test ${GREP:+--grep "$GREP"} $PROJECTS --shard="$SHARD"
+
+      - name: Update visual baselines
+        if: ${{ inputs.update-snapshots }}
+        run: npx playwright test --grep @visual --update-snapshots=all
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !inputs.update-snapshots && !cancelled() }}
+        with:
+          name: blob-report-${{ matrix.shard }}
+          path: blob-report
+          retention-days: 1
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.update-snapshots }}
+        with:
+          name: visual-baselines
+          path: tests/**/__screenshots__/**
+
+  report:
+    needs: test
+    if: ${{ !inputs.update-snapshots && !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: blob-report-*
+          path: all-blob-reports
+          merge-multiple: true
+
+      - name: Merge reports
+        env:
+          PLAYWRIGHT_JUNIT_OUTPUT_NAME: reports/junit.xml
+          PLAYWRIGHT_JSON_OUTPUT_NAME: reports/results.json
+        run: npx playwright merge-reports --reporter html,junit,json ./all-blob-reports
+
+      - name: Write job summary
+        run: node scripts/ci-summary.mjs reports/results.json
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-${{ github.run_attempt }}
+          path: |
+            playwright-report
+            reports
+          retention-days: 14
