@@ -22,6 +22,10 @@ on:
         type: choice
         options: ['1', '2', '4']
         default: '1'
+      repeat:
+        description: Repeat each test N times to hunt flaky tests
+        type: string
+        default: '1'
       update-snapshots:
         description: Regenerate visual baselines (ignores the other inputs)
         type: boolean
@@ -38,5 +42,6 @@ jobs:
       app: ${{ inputs.app }}
       browser: ${{ inputs.browser }}
       shards: ${{ fromJSON(inputs.shards) }}
+      repeat: ${{ fromJSON(inputs.repeat) }}
       update-snapshots: ${{ inputs.update-snapshots }}
     secrets: inherit
