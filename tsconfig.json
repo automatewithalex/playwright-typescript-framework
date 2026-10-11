@@ -19,7 +19,8 @@
       "@data/*": ["./src/data/*"],
       "@fixtures/*": ["./src/fixtures/*"],
       "@pages/*": ["./src/pages/*"],
-      "@support/*": ["./src/support/*"]
+      "@support/*": ["./src/support/*"],
+      "@mocks/*": ["./src/mocks/*"]
     },
     "types": ["node"]
   },
