@@ -12,6 +12,6 @@ export class DashboardPage extends BasePage {
   }
 
   project(name: string): Locator {
-    return this.page.getByText(name, { exact: true });
+    return this.page.getByRole('heading', { name, exact: true });
   }
 }
