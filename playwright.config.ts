@@ -33,7 +33,8 @@ export default defineConfig({
   retries: isCI ? 2 : 0,
   workers: isCI ? 4 : undefined,
   timeout: 30_000,
-  expect: { timeout: 7_000 },
+  expect: { timeout: 7_000, toHaveScreenshot: { maxDiffPixelRatio: 0.01 } },
+  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}{ext}',
   outputDir: 'test-results',
   metadata: { environment: env.name },
 
