@@ -14,6 +14,7 @@ export default tseslint.config(
       ...playwright.configs['flat/recommended'].rules,
       'playwright/expect-expect': ['warn', { assertFunctionNames: ['expect*'] }],
       'playwright/no-skipped-test': ['error', { allowConditional: true }],
+      'playwright/valid-test-tags': 'off',
     },
   },
   {
