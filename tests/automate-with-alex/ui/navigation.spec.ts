@@ -20,22 +20,28 @@ test.describe('Navigation', { tag: Tag.ui }, () => {
     });
   }
 
-  test('mobile menu opens, lists links and closes after a choice', { tag: [Tag.mobile, Tag.smoke] }, async ({
-    homePage,
-  }) => {
-    await homePage.mobileMenu.open();
-    for (const name of mobileNavigation) {
-      await expect(homePage.mobileMenu.link(name)).toBeVisible();
-    }
+  test(
+    'mobile menu opens, lists links and closes after a choice',
+    { tag: [Tag.mobile, Tag.smoke] },
+    async ({ homePage }) => {
+      await homePage.mobileMenu.open();
+      for (const name of mobileNavigation) {
+        await expect(homePage.mobileMenu.link(name)).toBeVisible();
+      }
 
-    await homePage.mobileMenu.link('Contact').click();
+      await homePage.mobileMenu.link('Contact').click();
 
-    await expect(homePage.mobileMenu.link('Contact')).toBeHidden();
-    await expect(homePage.section('contact')).toBeInViewport();
-  });
+      await expect(homePage.mobileMenu.link('Contact')).toBeHidden();
+      await expect(homePage.section('contact')).toBeInViewport();
+    },
+  );
 
-  test('page does not scroll sideways on a phone', { tag: [Tag.mobile, Tag.regression] }, async ({ page }) => {
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
-    expect(overflow).toBeLessThanOrEqual(0);
-  });
+  test(
+    'page does not scroll sideways on a phone',
+    { tag: [Tag.mobile, Tag.regression] },
+    async ({ page }) => {
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
+      expect(overflow).toBeLessThanOrEqual(0);
+    },
+  );
 });
