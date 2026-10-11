@@ -8,6 +8,7 @@ import { Navigation } from '@components/automate-with-alex/Navigation';
 export class HomePage extends BasePage {
   protected readonly path = '/';
 
+  readonly header: Locator;
   readonly heading: Locator;
   readonly bookCallLink: Locator;
   readonly navigation: Navigation;
@@ -17,6 +18,7 @@ export class HomePage extends BasePage {
 
   constructor(page: Page) {
     super(page);
+    this.header = page.getByRole('banner');
     this.heading = page.getByRole('heading', { level: 1 });
     this.bookCallLink = page.getByRole('link', { name: /book an intro call/i }).first();
     this.navigation = new Navigation(page);
