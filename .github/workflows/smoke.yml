@@ -1,0 +1,21 @@
+name: Smoke
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '0 6 * * *'
+
+concurrency:
+  group: smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    uses: ./.github/workflows/_run-tests.yml
+    with:
+      grep: '@smoke'
+    secrets: inherit
