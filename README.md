@@ -147,6 +147,7 @@ On demand from the CLI:
 
 ```bash
 gh workflow run on-demand.yml -f grep="@api" -f app=testblocks -f browser=chromium
+gh workflow run on-demand.yml -f grep="@regression" -f browser=webkit -f repeat=5   # hunt flaky tests
 gh workflow run on-demand.yml -f update-snapshots=true
 ```
 
@@ -155,7 +156,9 @@ Reports: open the run, download `playwright-report-<attempt>`, then `npx playwri
 ## Stability
 
 - **Retries:** 2 in CI, 0 locally. The first retry records a trace; failures keep a video and a screenshot.
-- **Flaky tests:** tests that pass only on retry are listed in the job summary.
+- **Flaky tests:** tests that pass only on retry are listed in the job summary. Reproduce them with the
+  on-demand `repeat` input; browser-specific problems that cannot be fixed in the test are skipped for that
+  browser with a reason and a linked issue.
 - **Healing:** run the `heal-failing-test` skill or the Playwright healer agent. It proposes a fix (usually
   a locator in a page object), and you review it as a normal commit. There is no silent runtime
   self-healing, because that would hide real regressions.
