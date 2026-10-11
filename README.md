@@ -148,6 +148,7 @@ On demand from the CLI:
 ```bash
 gh workflow run on-demand.yml -f grep="@api" -f app=testblocks -f browser=chromium
 gh workflow run on-demand.yml -f grep="@regression" -f browser=webkit -f repeat=5   # hunt flaky tests
+gh workflow run on-demand.yml -f grep=all -f app=testblocks -f browser=all          # everything for one app
 gh workflow run on-demand.yml -f update-snapshots=true
 ```
 
