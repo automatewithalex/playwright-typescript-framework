@@ -16,12 +16,12 @@ export class ContactForm extends Component {
 
   constructor(page: Page) {
     super(page.getByRole('form', { name: 'Requirements form' }));
-    this.name = this.root.getByLabel('Name', { exact: true });
-    this.email = this.root.getByRole('textbox', { name: 'Email' });
-    this.company = this.root.getByLabel('Company');
-    this.service = this.root.getByLabel('Service needed');
-    this.details = this.root.getByLabel(/Your requirements/);
-    this.timeline = this.root.getByLabel(/Timeline/);
+    this.name = this.root.getByRole('textbox', { name: 'Name', exact: true });
+    this.email = this.root.getByRole('textbox', { name: 'Email', exact: true });
+    this.company = this.root.getByRole('textbox', { name: 'Company', exact: true });
+    this.service = this.root.getByRole('combobox', { name: 'Service needed' });
+    this.details = this.root.getByRole('textbox', { name: /your requirements/i });
+    this.timeline = this.root.getByRole('combobox', { name: /timeline/i });
     this.submitButton = this.root.getByRole('button', { name: /send your requirements/i });
     this.successMessage = this.root.getByRole('status').filter({ hasText: 'Message received' });
     this.errorMessage = this.root.getByRole('alert');
