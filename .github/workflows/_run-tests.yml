@@ -19,6 +19,10 @@ on:
         description: Number of parallel shards
         type: number
         default: 1
+      repeat:
+        description: Run every selected test this many times (flaky hunting)
+        type: number
+        default: 1
       update-snapshots:
         description: Regenerate visual baselines and upload them as an artifact
         type: boolean
@@ -72,7 +76,8 @@ jobs:
           GREP: ${{ inputs.grep }}
           PROJECTS: ${{ needs.plan.outputs.projects }}
           SHARD: ${{ matrix.shard }}/${{ strategy.job-total }}
-        run: npx playwright test ${GREP:+--grep "$GREP"} $PROJECTS --shard="$SHARD"
+          REPEAT: ${{ inputs.repeat }}
+        run: npx playwright test ${GREP:+--grep "$GREP"} $PROJECTS --shard="$SHARD" --repeat-each="$REPEAT"
 
       - name: Update visual baselines
         if: ${{ inputs.update-snapshots }}
