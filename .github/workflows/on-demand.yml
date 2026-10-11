@@ -1,0 +1,42 @@
+name: On demand
+
+on:
+  workflow_dispatch:
+    inputs:
+      grep:
+        description: Tags to run, e.g. @smoke, @api, "@regression|@a11y". Empty runs everything.
+        type: string
+        default: '@smoke'
+      app:
+        description: Application
+        type: choice
+        options: [all, awa, testblocks]
+        default: all
+      browser:
+        description: Browser
+        type: choice
+        options: [all, chromium, firefox, webkit, mobile]
+        default: chromium
+      shards:
+        description: Parallel shards
+        type: choice
+        options: ['1', '2', '4']
+        default: '1'
+      update-snapshots:
+        description: Regenerate visual baselines (ignores the other inputs)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    uses: ./.github/workflows/_run-tests.yml
+    with:
+      grep: ${{ inputs.grep }}
+      app: ${{ inputs.app }}
+      browser: ${{ inputs.browser }}
+      shards: ${{ fromJSON(inputs.shards) }}
+      update-snapshots: ${{ inputs.update-snapshots }}
+    secrets: inherit
