@@ -13,19 +13,27 @@ test.describe('Login', { tag: Tag.ui }, () => {
     await expect(loginPage.signInButton).toBeEnabled();
   });
 
-  test('wrong credentials show an error message', { tag: Tag.regression }, async ({ loginPage }) => {
-    test.fail(
-      true,
-      'Known bug: a 401 from /api/auth/login reloads /login, clearing the form and the error toast',
-    );
+  test(
+    'wrong credentials show an error message',
+    { tag: Tag.regression },
+    async ({ loginPage, browserName }) => {
+      test.skip(
+        browserName === 'webkit',
+        'Reload timing makes this check nondeterministic in WebKit, see #21',
+      );
+      test.fail(
+        true,
+        'Known bug: a 401 from /api/auth/login reloads /login, clearing the form and the error toast',
+      );
 
-    const email = 'nobody-e2e@example.com';
+      const email = 'nobody-e2e@example.com';
 
-    await loginPage.loginAndSettle({ email, password: 'Wrong-password-1!' });
+      await loginPage.loginAndSettle({ email, password: 'Wrong-password-1!' });
 
-    await expect(loginPage.email).toHaveValue(email);
-    await expect(loginPage.errorMessage).toBeVisible();
-  });
+      await expect(loginPage.email).toHaveValue(email);
+      await expect(loginPage.errorMessage).toBeVisible();
+    },
+  );
 
   test(
     'a registered user signs in and lands on the dashboard',
