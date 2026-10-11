@@ -44,6 +44,7 @@ export default defineConfig({
 
   use: {
     trace: 'on-first-retry',
+    contextOptions: { reducedMotion: 'reduce' },
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     actionTimeout: 10_000,
