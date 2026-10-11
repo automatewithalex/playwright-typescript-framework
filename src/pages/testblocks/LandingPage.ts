@@ -13,4 +13,10 @@ export class LandingPage extends BasePage {
     this.heading = page.getByRole('heading', { level: 1 });
     this.pricing = new PricingTable(page);
   }
+
+  async openWithFrozenTimers(): Promise<void> {
+    await this.page.clock.install();
+    await this.open();
+    await this.page.clock.pauseAt(Date.now() + 1_000);
+  }
 }
