@@ -10,9 +10,13 @@ test.describe('Landing page', { tag: Tag.ui }, () => {
   });
 
   test.describe('Pricing', { tag: Tag.regression }, () => {
+    test.skip(
+      ({ browserName }) => browserName === 'webkit',
+      'Playwright WebKit hangs scrolling on this page, see #20',
+    );
+
     test.beforeEach(async ({ landingPage }) => {
-      await landingPage.openWithFrozenTimers();
-      await landingPage.pricing.reveal();
+      await landingPage.open();
     });
 
     for (const plan of plans) {
