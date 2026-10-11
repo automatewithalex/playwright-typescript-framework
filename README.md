@@ -136,19 +136,19 @@ All pipelines call one reusable workflow, `_run-tests.yml`. It runs inside the o
 container, merges sharded blob reports into one HTML + JUnit + JSON report, uploads it as an artifact
 and writes a summary of failed and flaky tests to the job page.
 
-| Workflow   | Trigger                         | Runs                                                                         |
-| ---------- | ------------------------------- | ---------------------------------------------------------------------------- |
-| PR checks  | pull request                    | typecheck, lint, format, then `@smoke` on Chromium                           |
-| Smoke      | push to `main`, daily 06:00 UTC | `@smoke` on every project                                                    |
-| Regression | nightly 02:00 UTC, manual       | full suite, 2 shards                                                         |
-| On demand  | manual                          | any tag expression × app × browser × shards; can regenerate visual baselines |
+| Workflow   | Trigger                         | Runs                                                                                           |
+| ---------- | ------------------------------- | ---------------------------------------------------------------------------------------------- |
+| PR checks  | pull request                    | typecheck, lint, format, then `@smoke` on Chromium                                             |
+| Smoke      | push to `main`, daily 06:00 UTC | `@smoke` on every project                                                                      |
+| Regression | nightly 02:00 UTC, manual       | full suite, 2 shards                                                                           |
+| On demand  | manual                          | optional tag (empty runs everything) × app × browser × shards; can regenerate visual baselines |
 
 On demand from the CLI:
 
 ```bash
-gh workflow run on-demand.yml -f grep="@api" -f app=testblocks -f browser=chromium
-gh workflow run on-demand.yml -f grep="@regression" -f browser=webkit -f repeat=5   # hunt flaky tests
-gh workflow run on-demand.yml -f grep=all -f app=testblocks -f browser=all          # everything for one app
+gh workflow run on-demand.yml                                                      # every test, chromium
+gh workflow run on-demand.yml -f tag="@api" -f app=testblocks
+gh workflow run on-demand.yml -f tag="@regression" -f browser=webkit -f repeat=5   # hunt flaky tests
 gh workflow run on-demand.yml -f update-snapshots=true
 ```
 
