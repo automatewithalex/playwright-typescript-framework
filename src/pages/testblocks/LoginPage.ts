@@ -25,4 +25,9 @@ export class LoginPage extends BasePage {
     await this.password.fill(password);
     await this.signInButton.click();
   }
+
+  async loginAndSettle(credentials: Credentials): Promise<void> {
+    await this.login(credentials);
+    await this.page.waitForLoadState('networkidle');
+  }
 }

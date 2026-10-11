@@ -14,11 +14,17 @@ test.describe('Login', { tag: Tag.ui }, () => {
   });
 
   test('wrong credentials show an error message', { tag: Tag.regression }, async ({ loginPage }) => {
-    test.fail(true, 'Known bug: a 401 from /api/auth/login reloads /login and the error toast is lost');
+    test.fail(
+      true,
+      'Known bug: a 401 from /api/auth/login reloads /login, clearing the form and the error toast',
+    );
 
-    await loginPage.login({ email: 'nobody-e2e@example.com', password: 'Wrong-password-1!' });
+    const email = 'nobody-e2e@example.com';
 
-    await expect(loginPage.errorMessage).toBeVisible({ timeout: 5_000 });
+    await loginPage.loginAndSettle({ email, password: 'Wrong-password-1!' });
+
+    await expect(loginPage.email).toHaveValue(email);
+    await expect(loginPage.errorMessage).toBeVisible();
   });
 
   test(
