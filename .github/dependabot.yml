@@ -9,6 +9,10 @@ updates:
         patterns: ['@playwright/*', '@axe-core/playwright']
       lint:
         patterns: ['eslint*', '@eslint/*', 'typescript-eslint', 'prettier']
+    ignore:
+      # typescript-eslint supports TypeScript < 6.1; revisit when it adds 7.x
+      - dependency-name: typescript
+        update-types: ['version-update:semver-major']
 
   - package-ecosystem: github-actions
     directory: /
