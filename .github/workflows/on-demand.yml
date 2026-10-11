@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       grep:
-        description: Tags to run, e.g. @smoke, @api, "@regression|@a11y". Empty runs everything.
+        description: Tags to run, e.g. @smoke, @api, "@regression|@a11y", or "all" to run everything.
         type: string
         default: '@smoke'
       app:
@@ -38,7 +38,7 @@ jobs:
   run:
     uses: ./.github/workflows/_run-tests.yml
     with:
-      grep: ${{ inputs.grep }}
+      grep: ${{ inputs.grep != 'all' && inputs.grep || '' }}
       app: ${{ inputs.app }}
       browser: ${{ inputs.browser }}
       shards: ${{ fromJSON(inputs.shards) }}
