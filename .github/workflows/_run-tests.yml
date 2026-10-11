@@ -78,14 +78,14 @@ jobs:
         if: ${{ inputs.update-snapshots }}
         run: npx playwright test --grep @visual --update-snapshots=all
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ !inputs.update-snapshots && !cancelled() }}
         with:
           name: blob-report-${{ matrix.shard }}
           path: blob-report
           retention-days: 1
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         if: ${{ inputs.update-snapshots }}
         with:
           name: visual-baselines
@@ -118,7 +118,7 @@ jobs:
       - name: Write job summary
         run: node scripts/ci-summary.mjs reports/results.json
 
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: playwright-report-${{ github.run_attempt }}
           path: |
