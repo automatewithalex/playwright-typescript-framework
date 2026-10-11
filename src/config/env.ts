@@ -2,11 +2,14 @@ import 'dotenv/config';
 import { z } from 'zod';
 import { environments } from './environments';
 
+const unsetWhenEmpty = <T extends z.ZodType>(schema: T) =>
+  z.preprocess((value) => (value === '' ? undefined : value), schema.optional());
+
 const schema = z.object({
   TEST_ENV: z.enum(['production', 'local']).default('production'),
-  TB_TEST_EMAIL: z.email().optional(),
-  TB_TEST_PASSWORD: z.string().min(1).optional(),
-  FAKER_SEED: z.coerce.number().int().optional(),
+  TB_TEST_EMAIL: unsetWhenEmpty(z.email()),
+  TB_TEST_PASSWORD: unsetWhenEmpty(z.string()),
+  FAKER_SEED: unsetWhenEmpty(z.coerce.number().int()),
 });
 
 const result = schema.safeParse(process.env);
