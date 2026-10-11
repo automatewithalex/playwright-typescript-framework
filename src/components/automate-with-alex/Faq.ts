@@ -9,11 +9,7 @@ export class Faq extends Component {
     this.items = this.root.locator('details');
   }
 
-  item(question: string | RegExp): Locator {
-    return this.items.filter({ has: this.page.locator('summary', { hasText: question }) });
-  }
-
-  async toggle(question: string | RegExp): Promise<void> {
-    await this.item(question).locator('summary').click();
+  async toggle(item: Locator): Promise<void> {
+    await item.locator('summary').click();
   }
 }
