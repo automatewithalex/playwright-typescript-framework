@@ -1,0 +1,33 @@
+name: PR checks
+
+on:
+  pull_request:
+
+concurrency:
+  group: pr-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run format:check
+
+  smoke:
+    needs: quality
+    uses: ./.github/workflows/_run-tests.yml
+    with:
+      grep: '@smoke'
+      browser: chromium
+    secrets: inherit
