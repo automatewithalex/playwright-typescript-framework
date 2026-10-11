@@ -14,7 +14,7 @@ export class ContactApi extends ApiClient {
 
   async sendRaw(body: string) {
     const response = await this.request.post('/api/contact', {
-      data: body,
+      data: Buffer.from(body),
       headers: { 'Content-Type': 'application/json' },
     });
     return this.parse(response, contactResponseSchema);
