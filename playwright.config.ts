@@ -1,9 +1,8 @@
 import { defineConfig, devices, type Project } from '@playwright/test';
 import { env } from './src/config/env';
+import { TESTBLOCKS_AUTH_FILE } from './src/support/auth';
 
 const isCI = Boolean(process.env.CI);
-
-export const TESTBLOCKS_AUTH_FILE = '.auth/testblocks-user.json';
 
 const desktopBrowsers = {
   chromium: devices['Desktop Chrome'],
