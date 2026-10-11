@@ -63,15 +63,15 @@ export default defineConfig({
       testIgnore: ['**/authenticated/**', '**/*.setup.ts'],
     }),
     {
-      name: 'testblocks:setup',
+      name: 'testblocks-auth:setup',
       testDir: './tests/testblocks',
       testMatch: /.*\.setup\.ts/,
       use: { baseURL: env.urls.testBlocks },
     },
     {
-      name: 'testblocks:authenticated',
+      name: 'testblocks-auth:chromium',
       testDir: './tests/testblocks/authenticated',
-      dependencies: ['testblocks:setup'],
+      dependencies: ['testblocks-auth:setup'],
       use: { ...devices['Desktop Chrome'], baseURL: env.urls.testBlocks, storageState: TESTBLOCKS_AUTH_FILE },
     },
   ],

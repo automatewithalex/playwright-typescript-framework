@@ -13,7 +13,7 @@
     "test:regression": "playwright test --grep @regression",
     "test:api": "playwright test --grep @api",
     "test:awa": "playwright test --project=awa:*",
-    "test:testblocks": "playwright test --project=testblocks:*",
+    "test:testblocks": "playwright test --project=testblocks*",
     "test:ui": "playwright test --ui",
     "report": "playwright show-report",
     "browsers": "playwright install --with-deps",
