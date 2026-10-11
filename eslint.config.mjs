@@ -24,5 +24,9 @@ export default tseslint.config(
       'no-empty-pattern': 'off',
     },
   },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: { globals: { process: 'readonly' } },
+  },
   prettier,
 );
