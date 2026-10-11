@@ -1,0 +1,22 @@
+{
+  "name": "playwright-typescript-framework",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Playwright + TypeScript test automation framework",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "playwright test",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0",
+    "@types/node": "26.6.5",
+    "typescript": "6.0.3"
+  }
+}
