@@ -16,5 +16,12 @@ export default tseslint.config(
       'playwright/no-skipped-test': ['error', { allowConditional: true }],
     },
   },
+  {
+    files: ['src/fixtures/**/*.ts'],
+    rules: {
+      '@typescript-eslint/no-invalid-void-type': 'off',
+      'no-empty-pattern': 'off',
+    },
+  },
   prettier,
 );
