@@ -3,10 +3,10 @@ name: On demand
 on:
   workflow_dispatch:
     inputs:
-      grep:
-        description: Tags to run, e.g. @smoke, @api, "@regression|@a11y", or "all" to run everything.
+      tag:
+        description: Optional tag expression, e.g. @smoke, @api, "@regression|@a11y". Leave empty to run every test.
         type: string
-        default: '@smoke'
+        required: false
       app:
         description: Application
         type: choice
@@ -38,7 +38,7 @@ jobs:
   run:
     uses: ./.github/workflows/_run-tests.yml
     with:
-      grep: ${{ inputs.grep != 'all' && inputs.grep || '' }}
+      grep: ${{ inputs.tag }}
       app: ${{ inputs.app }}
       browser: ${{ inputs.browser }}
       shards: ${{ fromJSON(inputs.shards) }}
