@@ -20,7 +20,8 @@
       "@fixtures/*": ["./src/fixtures/*"],
       "@pages/*": ["./src/pages/*"],
       "@support/*": ["./src/support/*"]
-    }
+    },
+    "types": ["node"]
   },
   "include": ["src", "tests", "*.ts"]
 }
