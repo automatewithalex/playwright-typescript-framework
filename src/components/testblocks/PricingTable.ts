@@ -11,6 +11,10 @@ export class PricingTable extends Component {
     this.annualToggle = this.root.getByRole('button', { name: /^Annual/ });
   }
 
+  async reveal(): Promise<void> {
+    await this.root.evaluate((section) => section.scrollIntoView({ block: 'start' }));
+  }
+
   plan(name: string): Locator {
     return this.root.locator('div', { has: this.page.getByRole('heading', { name, level: 3 }) }).last();
   }
